@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+
+commonLabels:
+  app.kubernetes.io/name: auth-service
+  app.kubernetes.io/component: backend
+  conga.io/site-group: SSG1
+  conga.io/sync-wave: "1"
