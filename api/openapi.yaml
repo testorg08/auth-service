@@ -1,0 +1,180 @@
+openapi: 3.0.3
+info:
+  title: Conga Authentication Service API
+  description: Core authentication and authorization API for Conga Platform
+  version: 1.0.0
+  contact:
+    name: Platform Team
+    email: platform-team@conga.com
+  license:
+    name: Proprietary
+    url: https://conga.com/license
+
+servers:
+  - url: https://auth-dev.conga.com/api/v1
+    description: Development server
+  - url: https://auth-staging.conga.com/api/v1
+    description: Staging server
+  - url: https://auth.conga.com/api/v1
+    description: Production server
+
+paths:
+  /auth/login:
+    post:
+      summary: User login
+      description: Authenticate user credentials and return access token
+      operationId: login
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@conga.com
+                password:
+                  type: string
+                  format: password
+                  example: SecurePassword123!
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  refresh_token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  expires_in:
+                    type: integer
+                    example: 3600
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid credentials
+        '429':
+          description: Too many login attempts
+
+  /auth/validate:
+    post:
+      summary: Validate token
+      description: Validate an access token and return user information
+      operationId: validateToken
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Token is valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                    example: true
+                  user:
+                    $ref: '#/components/schemas/User'
+                  expires_at:
+                    type: string
+                    format: date-time
+        '401':
+          description: Invalid or expired token
+
+  /auth/refresh:
+    post:
+      summary: Refresh token
+      description: Refresh an access token using a refresh token
+      operationId: refreshToken
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refresh_token
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  expires_in:
+                    type: integer
+        '401':
+          description: Invalid refresh token
+
+  /auth/logout:
+    post:
+      summary: User logout
+      description: Invalidate user session and tokens
+      operationId: logout
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+        '401':
+          description: Invalid token
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        email:
+          type: string
+          format: email
+          example: user@conga.com
+        name:
+          type: string
+          example: John Doe
+        roles:
+          type: array
+          items:
+            type: string
+          example: ["user", "admin"]
+        created_at:
+          type: string
+          format: date-time
+        last_login:
+          type: string
+          format: date-time
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

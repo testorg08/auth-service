@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: auth-service-prod
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: auth-service
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: conga-platform
+    conga.io/site-group: SSG1
+    conga.io/environment: prod
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/testorg08/auth-service
+    targetRevision: v1.0.0
+    path: k8s/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: auth-prod
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m
+  info:
+    - name: 'Site Group'
+      value: 'SSG1'
+    - name: 'Sync Wave'
+      value: '1'
+    - name: 'Environment'
+      value: 'Production'
+    - name: 'Owner'
+      value: 'Platform Team'
+    - name: 'Change Control'
+      value: 'Required'

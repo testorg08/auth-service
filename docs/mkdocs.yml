@@ -1,0 +1,18 @@
+site_name: 'Conga Authentication Service'
+site_description: 'Core authentication and authorization service for Conga Platform'
+
+nav:
+  - Home: index.md
+  - API Documentation: api.md
+  - Deployment Guide: deployment.md
+  - Architecture: architecture.md
+  - Security: security.md
+
+plugins:
+  - techdocs-core
+
+theme:
+  name: material
+  palette:
+    primary: 'blue'
+    accent: 'blue'

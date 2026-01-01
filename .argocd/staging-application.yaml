@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: auth-service-staging
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: auth-service
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: conga-platform
+    conga.io/site-group: SSG1
+    conga.io/environment: staging
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/testorg08/auth-service
+    targetRevision: release
+    path: k8s/overlays/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: auth-staging
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  info:
+    - name: 'Site Group'
+      value: 'SSG1'
+    - name: 'Sync Wave'
+      value: '1'
+    - name: 'Environment'
+      value: 'Staging'
+    - name: 'Owner'
+      value: 'Platform Team'
