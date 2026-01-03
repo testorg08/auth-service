@@ -17,7 +17,7 @@ spec:
     path: k8s/overlays/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: auth-dev
+    namespace: ssg1-dev
   syncPolicy:
     automated:
       prune: true

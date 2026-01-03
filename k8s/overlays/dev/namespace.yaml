@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ssg1-dev
+  labels:
+    name: ssg1-dev
+    environment: dev
+    conga.io/site-group: ssg1

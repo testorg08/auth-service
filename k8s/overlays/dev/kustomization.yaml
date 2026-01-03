@@ -3,9 +3,10 @@ kind: Kustomization
 
 resources:
 - ../../base
+- namespace.yaml
 
 images:
-- name: nginx:1.21-alpine
+- name: ghcr.io/testorg08/auth-service
   newName: ghcr.io/testorg08/auth-service
   newTag: latest
 

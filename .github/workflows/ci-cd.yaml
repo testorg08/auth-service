@@ -43,18 +43,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build application
-        run: |
-          echo "Building auth-service..."
-          echo "📦 Building Docker image"
-          echo "🏷️  Tagging image: auth-service:${{ github.sha }}"
-          echo "✅ Build completed successfully"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Simulate container push
-        run: |
-          echo "Pushing to container registry..."
-          echo "📤 Pushing auth-service:${{ github.sha }}"
-          echo "✅ Image pushed successfully"
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/testorg08/auth-service:${{ github.sha }}
+            ghcr.io/testorg08/auth-service:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   deploy-dev:
     name: Deploy to Development
@@ -63,11 +71,31 @@ jobs:
     if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
     environment: development
     steps:
-      - name: Deploy to dev environment
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Configure kubectl
         run: |
-          echo "🚀 Deploying auth-service to development..."
-          echo "📝 Updating Kubernetes manifests"
-          echo "🔄 Triggering ArgoCD sync"
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
+          export KUBECONFIG=kubeconfig
+
+      - name: Deploy to Kubernetes
+        run: |
+          # Update image tag in kustomization
+          cd k8s/overlays/dev
+          kustomize edit set image ghcr.io/testorg08/auth-service=ghcr.io/testorg08/auth-service:${{ github.sha }}
+          
+          # Apply to dev namespace
+          kubectl apply -k . -n auth-dev
+          
+          # Wait for rollout
+          kubectl rollout status deployment/auth-service -n auth-dev --timeout=300s
+          
           echo "✅ Deployment to development completed"
 
   deploy-staging:
