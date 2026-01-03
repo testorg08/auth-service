@@ -3,13 +3,9 @@ kind: Deployment
 metadata:
   name: auth-service
 spec:
-  replicas: 1
   template:
     spec:
       containers:
       - name: auth-service
-        env:
-        - name: ENVIRONMENT
-          value: "dev"
-        - name: LOG_LEVEL
-          value: "debug"
+        image: auth-service:local
+        imagePullPolicy: Never
