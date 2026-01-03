@@ -1,0 +1,22 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: auth-service-staging
+  title: Authentication Service (Staging)
+  description: Staging environment for authentication service
+  annotations:
+    github.com/project-slug: testorg08/auth-service
+    argocd/app-name: auth-service-staging
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/kubernetes-id: auth-service
+    backstage.io/kubernetes-namespace: ssg1-staging
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=auth-service'
+  tags:
+    - authentication
+    - staging
+    - ssg1
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: conga-platform-core
