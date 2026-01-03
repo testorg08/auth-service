@@ -14,12 +14,12 @@ nameSuffix: ""
 
 patchesStrategicMerge: []
 
-# Development-specific configurations
+# Staging-specific configurations
 replicas:
 - name: auth-service
-  count: 1
+  count: 2
 
 # Environment-specific labels
 commonLabels:
-  environment: development
-  conga.io/environment: dev
+  environment: staging
+  conga.io/environment: staging

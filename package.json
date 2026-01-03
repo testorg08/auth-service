@@ -1,0 +1,33 @@
+{
+  "name": "auth-service",
+  "version": "1.0.0",
+  "description": "Core authentication and authorization service for Conga Platform",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest",
+    "lint": "eslint src/",
+    "build": "echo 'No build step required for this demo service'"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2",
+    "supertest": "^6.3.3",
+    "eslint": "^8.55.0"
+  },
+  "keywords": [
+    "authentication",
+    "authorization",
+    "microservice",
+    "conga-platform"
+  ],
+  "author": "Platform Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

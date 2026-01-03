@@ -12,6 +12,10 @@ metadata:
     conga.io/sync-wave: "1"
     conga.io/database-dependencies: auth_database
     conga.io/infrastructure-requirements: postgresql,redis
+    # CI/CD Integration
+    github.com/workflows: ci-cd.yaml
+    backstage.io/kubernetes-id: auth-service
+    backstage.io/kubernetes-namespace: auth-dev
   tags:
     - authentication
     - authorization
@@ -28,6 +32,9 @@ metadata:
     - url: https://auth.conga.com
       title: Production Environment
       icon: web
+    - url: https://github.com/testorg08/auth-service/actions
+      title: GitHub Actions
+      icon: github
 spec:
   type: service
   lifecycle: production
