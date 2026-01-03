@@ -6,7 +6,7 @@ metadata:
   description: Core authentication and authorization service for Conga Platform
   annotations:
     github.com/project-slug: testorg08/auth-service
-    argocd/app-selector: app.kubernetes.io/name=auth-service
+    argocd/app-name: auth-service-dev,auth-service-staging
     backstage.io/techdocs-ref: dir:.
     conga.io/site-group: SSG1
     conga.io/sync-wave: "1"
