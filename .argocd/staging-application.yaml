@@ -13,11 +13,11 @@ spec:
   project: default
   source:
     repoURL: https://github.com/testorg08/auth-service
-    targetRevision: release
+    targetRevision: main
     path: k8s/overlays/staging
   destination:
     server: https://kubernetes.default.svc
-    namespace: auth-staging
+    namespace: ssg1-staging
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
