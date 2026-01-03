@@ -27,7 +27,15 @@ jobs:
         run: npm install
 
       - name: Run tests
-        run: npm test -- --passWithNoTests
+        run: npm test -- --passWithNoTests --coverage --coverageReporters=lcov --coverageReporters=text
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
 
   build:
     name: Build and Push

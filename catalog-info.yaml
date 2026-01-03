@@ -8,12 +8,10 @@ metadata:
     github.com/project-slug: testorg08/auth-service
     argocd/app-name: auth-service-dev
     backstage.io/techdocs-ref: dir:.
-    conga.io/site-group: SSG1
-    conga.io/sync-wave: "1"
-    conga.io/database-dependencies: auth_database
-    conga.io/infrastructure-requirements: postgresql,redis
-    # CI/CD Integration
+    # Code Coverage Integration
+    backstage.io/code-coverage: enabled
     github.com/workflows: ci-cd.yaml
+    # Kubernetes Integration
     backstage.io/kubernetes-id: auth-service
     backstage.io/kubernetes-namespace: ssg1-dev,ssg1-staging
     backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=auth-service'
