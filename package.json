@@ -7,6 +7,7 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "lint": "eslint src/",
     "build": "echo 'No build step required for this demo service'"
   },

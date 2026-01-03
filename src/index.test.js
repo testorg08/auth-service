@@ -1,49 +1,11 @@
 const request = require('supertest');
-const express = require('express');
+const createApp = require('./index');
 
-// Import the app logic (we'll need to refactor index.js to export the app)
 describe('Auth Service', () => {
   let app;
 
   beforeEach(() => {
-    // Create a new app instance for each test
-    app = express();
-    app.use(express.json());
-
-    // Health check endpoints
-    app.get('/health', (req, res) => {
-      res.status(200).json({ 
-        status: 'healthy', 
-        service: 'auth-service',
-        timestamp: new Date().toISOString(),
-        version: process.env.npm_package_version || '1.0.0'
-      });
-    });
-
-    app.get('/ready', (req, res) => {
-      res.status(200).json({ 
-        status: 'ready', 
-        service: 'auth-service',
-        timestamp: new Date().toISOString()
-      });
-    });
-
-    // Root endpoint
-    app.get('/', (req, res) => {
-      res.json({
-        service: 'auth-service',
-        version: '1.0.0',
-        description: 'Authentication and authorization service for Conga Platform',
-        endpoints: [
-          'GET /health - Health check',
-          'GET /ready - Readiness check',
-          'POST /api/auth/login - User login',
-          'POST /api/auth/logout - User logout',
-          'GET /api/auth/me - Get current user'
-        ],
-        environment: process.env.NODE_ENV || 'development'
-      });
-    });
+    app = createApp();
   });
 
   describe('Health Endpoints', () => {
@@ -54,6 +16,7 @@ describe('Auth Service', () => {
       expect(response.body.status).toBe('healthy');
       expect(response.body.service).toBe('auth-service');
       expect(response.body.timestamp).toBeDefined();
+      expect(response.body.uptime).toBeDefined();
     });
 
     test('GET /ready should return ready status', async () => {
@@ -70,10 +33,52 @@ describe('Auth Service', () => {
       const response = await request(app).get('/');
       
       expect(response.status).toBe(200);
-      expect(response.body.service).toBe('auth-service');
-      expect(response.body.version).toBe('1.0.0');
-      expect(response.body.description).toContain('Authentication');
-      expect(Array.isArray(response.body.endpoints)).toBe(true);
+      expect(response.body.message).toBe('Authentication Service');
+      expect(response.body.version).toBeDefined();
+      expect(response.body.environment).toBeDefined();
+      expect(response.body.siteGroup).toBeDefined();
+    });
+  });
+
+  describe('Auth Endpoints', () => {
+    test('POST /auth/login should return login response', async () => {
+      const response = await request(app)
+        .post('/auth/login')
+        .send({ username: 'test', password: 'test' });
+      
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('Login endpoint');
+      expect(response.body.token).toBeDefined();
+      expect(response.body.user).toBeDefined();
+    });
+
+    test('POST /auth/validate should validate token', async () => {
+      const response = await request(app)
+        .post('/auth/validate')
+        .send({ token: 'demo-token' });
+      
+      expect(response.status).toBe(200);
+      expect(response.body.valid).toBe(true);
+      expect(response.body.user).toBeDefined();
+    });
+
+    test('GET /auth/me should return user info', async () => {
+      const response = await request(app).get('/auth/me');
+      
+      expect(response.status).toBe(200);
+      expect(response.body.user).toBeDefined();
+      expect(response.body.user.id).toBe(1);
+      expect(response.body.user.username).toBe('demo-user');
+      expect(Array.isArray(response.body.user.roles)).toBe(true);
+    });
+  });
+
+  describe('Error Handling', () => {
+    test('GET /nonexistent should return 404', async () => {
+      const response = await request(app).get('/nonexistent');
+      
+      expect(response.status).toBe(404);
+      expect(response.body.error).toBe('Endpoint not found');
     });
   });
 });
