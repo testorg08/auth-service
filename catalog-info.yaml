@@ -36,6 +36,12 @@ metadata:
     - url: https://github.com/testorg08/auth-service/actions
       title: GitHub Actions
       icon: github
+    - url: https://localhost:8080/applications/auth-service-dev
+      title: ArgoCD Dev
+      icon: dashboard
+    - url: https://localhost:8080/applications/auth-service-staging
+      title: ArgoCD Staging
+      icon: dashboard
 spec:
   type: service
   lifecycle: production
