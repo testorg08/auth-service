@@ -16,6 +16,7 @@ metadata:
     github.com/workflows: ci-cd.yaml
     backstage.io/kubernetes-id: auth-service
     backstage.io/kubernetes-namespace: ssg1-dev
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=auth-service'
   tags:
     - authentication
     - authorization
