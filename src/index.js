@@ -11,7 +11,8 @@ app.get('/health', (req, res) => {
     status: 'healthy', 
     service: 'auth-service',
     version: process.env.VERSION || 'dev',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
   });
 });
 
