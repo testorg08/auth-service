@@ -35,4 +35,5 @@ spec:
   system: conga-platform-core
   providesApis:
     - auth-api
-  dependsOn: []
+  dependsOn: 
+    - resource:default/conga-auth-service-dev-db-events
