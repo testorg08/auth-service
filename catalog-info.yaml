@@ -10,8 +10,6 @@ metadata:
     backstage.io/techdocs-ref: dir:.
     # Code Coverage Integration
     backstage.io/code-coverage: enabled
-    # Code Climate Integration (demo repo ID - replace with real one)
-    codeclimate.com/repo-id: auth-service-demo-repo-id
     github.com/workflows: ci-cd.yaml
     # Kubernetes Integration
     backstage.io/kubernetes-id: auth-service
