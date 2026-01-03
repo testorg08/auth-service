@@ -16,6 +16,8 @@ spec:
         app.kubernetes.io/component: backend
         conga.io/site-group: SSG1
     spec:
+      imagePullSecrets:
+      - name: ghcr-secret
       containers:
       - name: auth-service
         image: ghcr.io/testorg08/auth-service:latest
